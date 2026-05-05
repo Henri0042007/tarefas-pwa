@@ -1,16 +1,19 @@
 <template>
   <div class="task-item" :class="{ done: task.done }">
+    <img v-if="task.img_url" :src="task.img_url" class="task-thumbnail" alt="Imagem da tarefa" />
+
     <label class="task-label">
-      <input
-        type="checkbox"
-        :checked="task.done"
-        @change="$emit('toggle', task.id)"
-      />
+      <input type="checkbox" :checked="task.done" @change="$emit('toggle', task.id)" />
+
       <span class="task-title">{{ task.title }}</span>
+      <span class="priority" :class="task.priority">{{ task.priority }}</span>
     </label>
-    <button class="task-remove" @click="$emit('remove', task.id)">
-      Remover
-    </button>
+
+    <div class="task-actions">
+      <button class="task-edit" @click="$emit('edit', task)">Editar</button>
+
+      <button class="task-remove" @click="$emit('remove', task.id)">Remover</button>
+    </div>
   </div>
 </template>
 
@@ -20,9 +23,9 @@ defineProps({
     type: Object,
     required: true,
   },
-});
+})
 
-defineEmits(['toggle', 'remove']);
+defineEmits(['toggle', 'remove', 'edit'])
 </script>
 
 <style scoped>
@@ -63,6 +66,48 @@ defineEmits(['toggle', 'remove']);
 .task-item.done .task-title {
   text-decoration: line-through;
   color: #999;
+}
+
+.priority {
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  text-transform: capitalize;
+}
+
+.priority.baixa {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.priority.normal {
+  background-color: #fff3cd;
+  color: #856404;
+}
+
+.priority.alta {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.task-actions {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.task-edit {
+  background: none;
+  border: none;
+  color: #4a90d9;
+  cursor: pointer;
+  font-size: 0.85rem;
+  padding: 4px 8px;
+}
+
+.task-edit:hover {
+  text-decoration: underline;
 }
 
 .task-remove {
